@@ -1,4 +1,4 @@
-name := "-template"
+name := "serve-static"
 
 version := "0.0.1"
 
