@@ -20,7 +20,7 @@ def serve(path: Path, res: Response): Future[Response] = async {
     res.send(file)
 }
 
-def static(root: String) =
+def apply(root: String) =
   val rootpath = Paths.get(root)
 
   require(Files.isDirectory(rootpath), s"static: root path '$root' is not a directory")

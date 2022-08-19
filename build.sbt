@@ -1,6 +1,6 @@
 name := "serve-static"
 
-version := "0.0.1"
+version := "0.0.2"
 
 scalaVersion := "3.1.3"
 
