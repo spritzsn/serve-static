@@ -16,8 +16,7 @@ def serve(path: Path, res: Response): Future[Response] = async {
   else
     val file = await(readFile(path.toString, Codec.UTF8))
 
-    res.headers("Content-Type") = mime(path)
-    res.send(file)
+    res.set("Content-Type", mime(path)).send(file)
 }
 
 def apply(root: String) =
