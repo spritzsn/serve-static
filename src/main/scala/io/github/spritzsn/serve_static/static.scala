@@ -37,3 +37,5 @@ def apply(root: String) =
 
         await(serve(path, res))
     }
+
+// todo: Last-Modified
