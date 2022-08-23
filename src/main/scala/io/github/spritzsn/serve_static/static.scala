@@ -1,12 +1,14 @@
 package io.github.spritzsn.serve_static
 
-import io.github.spritzsn.spritz.{Request, Response, Server, responseTime, HandlerReturnType, RequestHandler2}
+import io.github.spritzsn.spritz.{HandlerReturnType, Request, RequestHandler2, Response, Server, responseTime}
 import io.github.spritzsn.fs.readFile
 import io.github.spritzsn.async.loop
 import cps.*
 import cps.monads.FutureAsyncMonad
 
 import java.nio.file.{Files, Path, Paths}
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import scala.concurrent.Future
 import scala.io.Codec
 
@@ -14,9 +16,11 @@ def serve(path: Path, res: Response): Future[Response] = async {
   if !Files.exists(path) then res.sendStatus(404)
   else if !Files.isReadable(path) then res.sendStatus(403)
   else
-    val file = await(readFile(path.toString, Codec.UTF8))
-
-    res.set("Content-Type", mime(path)).send(file)
+    res.set("Content-Type", mime(path)).send(await(readFile(path.toString, Codec.UTF8)))
+    res.set(
+      "Last-Modified",
+      DateTimeFormatter.RFC_1123_DATE_TIME.format(Files.getLastModifiedTime(path).toInstant.atZone(res.zoneId)),
+    )
 }
 
 def apply(root: String) =
@@ -37,5 +41,3 @@ def apply(root: String) =
 
         await(serve(path, res))
     }
-
-// todo: Last-Modified
