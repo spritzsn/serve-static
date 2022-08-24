@@ -1,6 +1,14 @@
 package io.github.spritzsn.serve_static
 
-import io.github.spritzsn.spritz.{HandlerReturnType, Request, RequestHandler2, Response, Server, responseTime}
+import io.github.spritzsn.spritz.{
+  HandlerReturnType,
+  Request,
+  RequestHandler2,
+  Response,
+  Server,
+  contentType,
+  responseTime,
+}
 import io.github.spritzsn.fs.readFile
 import io.github.spritzsn.async.loop
 import cps.*
@@ -12,7 +20,7 @@ import java.time.format.DateTimeFormatter
 import scala.concurrent.Future
 import scala.io.Codec
 
-def serve(path: Path, res: Response): Future[Response] = async {
+private def serve(path: Path, res: Response): Future[Response] = async {
   if !Files.exists(path) then res.sendStatus(404)
   else if !Files.isReadable(path) then res.sendStatus(403)
   else
@@ -41,3 +49,13 @@ def apply(root: String) =
 
         await(serve(path, res))
     }
+
+private def mime(path: Path): String =
+  val filename = path.getFileName.toString
+  val extension =
+    filename lastIndexOf '.' match
+      case -1  => ""
+      case idx => filename.substring(idx + 1)
+
+  contentType(extension)
+end mime
