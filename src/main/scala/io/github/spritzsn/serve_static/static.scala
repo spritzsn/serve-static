@@ -1,6 +1,6 @@
 package io.github.spritzsn.serve_static
 
-import io.github.spritzsn.spritz.{HandlerReturnType, RequestHandler, Response, Server, contentType, responseTime}
+import io.github.spritzsn.spritz.{RequestHandler, Response, Server, contentType}
 import io.github.spritzsn.fs.readFile
 import io.github.spritzsn.async.loop
 import cps.*
@@ -19,17 +19,15 @@ def apply(root: String): RequestHandler =
   require(Files.isExecutable(rootpath), s"static: root path '$root' is not a searchable directory")
 
   (req, res) =>
-    async {
-      if req.rest.isEmpty || req.rest == "/" then
-        val index = rootpath resolve "index.html"
+    if req.rest.isEmpty || req.rest == "/" then
+      val index = rootpath resolve "index.html"
 
-        await(serve(index, res))
-      else
-        val rest = if req.rest.startsWith("/") then req.rest drop 1 else req.rest
-        val path = rootpath resolve rest
+      serve(index, res)
+    else
+      val rest = if req.rest.startsWith("/") then req.rest drop 1 else req.rest
+      val path = rootpath resolve rest
 
-        await(serve(path, res))
-    }
+      serve(path, res)
 
 private def serve(path: Path, res: Response): Future[Response] = async {
   if !Files.exists(path) then res.sendStatus(404)
