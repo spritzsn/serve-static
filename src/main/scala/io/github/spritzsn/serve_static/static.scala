@@ -52,8 +52,13 @@ def apply(
               filename lastIndexOf '.' match
                 case -1  => ""
                 case idx => filename.substring(idx + 1)
+            val typ = contentType(extension)
+            val content =
+              if typ startsWith "text" then res.send(await(readFile(path.toString, Codec.UTF8)))
+              else res.send(await(readFile(path.toString)))
 
-            res.set("Content-Type", contentType(extension)).send(await(readFile(path.toString, Codec.UTF8)))
+            res.set("Content-Type", typ)
+
             if lastModified then
               res.set(
                 "Last-Modified",
