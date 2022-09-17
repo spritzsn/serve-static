@@ -53,11 +53,12 @@ def apply(
                 case -1  => ""
                 case idx => filename.substring(idx + 1)
             val typ = contentType(extension)
+            val file = await(readFile(path.toString))
             val content =
-              if typ startsWith "text" then res.send(await(readFile(path.toString, Codec.UTF8)))
-              else res.send(await(readFile(path.toString)))
+              if typ startsWith "text" then Codec.toUTF8(file.toArray)
+              else file
 
-            res.set("Content-Type", typ)
+            res.set("Content-Type", typ).send(content)
 
             if lastModified then
               res.set(
