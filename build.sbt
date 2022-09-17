@@ -1,6 +1,6 @@
 name := "serve-static"
 
-version := "0.0.10"
+version := "0.0.11"
 
 scalaVersion := "3.2.0"
 
@@ -38,8 +38,8 @@ homepage := Some(url("https://github.com/spritzsn/" + name.value))
 //libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.13" % "test"
 
 libraryDependencies ++= Seq(
-  "io.github.spritzsn" %%% "spritz" % "0.0.40",
-  "io.github.spritzsn" %%% "fs" % "0.0.7",
+  "io.github.spritzsn" %%% "spritz" % "0.0.41",
+  "io.github.spritzsn" %%% "fs" % "0.0.8",
 )
 
 //libraryDependencies ++= Seq(
